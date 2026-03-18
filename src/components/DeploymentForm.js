@@ -118,7 +118,7 @@ export default function DeploymentForm({ onDeploy }) {
 
                 <div className="input-group">
                     <label className="label">Select Deployment Platform</label>
-                    <div className="platform-grid">
+                    <div className="platform-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
                         <button
                             type="button"
                             className={`platform-btn ${platform === 'Vercel' ? 'active' : ''}`}
@@ -134,6 +134,14 @@ export default function DeploymentForm({ onDeploy }) {
                         >
                             <Globe width="20" height="20" />
                             <span>Netlify</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`platform-btn ${platform === 'DigitalOcean' ? 'active' : ''}`}
+                            onClick={() => setPlatform('DigitalOcean')}
+                        >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 0C5.408 0 .002 5.474.002 12.187c0 5.912 4.158 10.85 9.728 11.959v-4.065c-3.544-.997-5.592-4.23-5.592-7.894 0-4.582 3.706-8.315 8.287-8.315 4.582 0 8.315 3.733 8.315 8.315 0 3.677-2.062 6.897-5.592 7.894v4.065c5.572-1.11 9.729-6.047 9.729-11.959C24.877 5.474 18.67 0 12.04 0zm-2.41 22.065v-3.676H5.954v-3.649h3.676v-3.648H5.954V7.436H2.278v14.629h7.352z"/></svg>
+                            <span>DigitalOcean</span>
                         </button>
                     </div>
                 </div>
@@ -158,6 +166,9 @@ export default function DeploymentForm({ onDeploy }) {
                             )}
                             {platform === 'Netlify' && (
                                 <>Get your token from <a href="https://app.netlify.com/user/applications#personal-access-tokens" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Netlify User Settings</a></>
+                            )}
+                            {platform === 'DigitalOcean' && (
+                                <>Get your token from <a href="https://cloud.digitalocean.com/account/api/tokens" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">DigitalOcean API Tokens</a>. Requires <strong>write</strong> scope.</>
                             )}
                         </p>
                     </div>

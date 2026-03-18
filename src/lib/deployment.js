@@ -91,6 +91,8 @@ export async function createDeployment(repoUrl, platform, authToken, repoId) {
         processVercelDeployment(id);
     } else if (platform === 'Netlify') {
         processNetlifyDeployment(id);
+    } else if (platform === 'DigitalOcean') {
+        processDigitalOceanDeployment(id);
     } else {
         simulateGenericDeployment(id);
     }
@@ -471,4 +473,132 @@ async function processNetlifyDeployment(id) {
 
 async function simulateGenericDeployment(id) {
     // placeholder
-} 
+}
+
+// --- DigitalOcean Logic ---
+
+async function processDigitalOceanDeployment(id) {
+    const addLog = (msg) => {
+        const d = deployments.get(id);
+        if (d) d.logs.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+    };
+    const setStatus = (s) => {
+        const d = deployments.get(id);
+        if (d) {
+            d.status = s;
+            saveData();
+        }
+    };
+
+    try {
+        const d = deployments.get(id);
+        setStatus(DeploymentStatus.CLONING);
+
+        // Clone repository locally (for tracking / verification)
+        const clonePath = await cloneRepository(d.repoUrl, id, addLog);
+
+        // Parse org/repo from URL
+        // e.g. https://github.com/username/project -> username/project
+        const repoMatch = d.repoUrl.match(/github\.com[/:]([^/]+\/[^/]+?)(\.git)?$/);
+        if (!repoMatch) throw new Error('Could not parse GitHub repo from URL.');
+        const githubRepo = repoMatch[1]; // e.g. "username/project"
+        const projectName = githubRepo.split('/')[1].toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+        addLog(`Creating DigitalOcean App for ${githubRepo}...`);
+        setStatus(DeploymentStatus.DEPLOYING);
+
+        // Build the App Spec
+        // DigitalOcean App Platform will auto-detect framework and build
+        const appSpec = {
+            name: `${projectName}-${id}`,
+            region: 'nyc',
+            services: [],
+            static_sites: [
+                {
+                    name: projectName,
+                    github: {
+                        repo: githubRepo,
+                        branch: 'main',
+                        deploy_on_push: false
+                    },
+                    build_command: '',
+                    output_dir: '',
+                }
+            ]
+        };
+
+        // Create the App
+        const createRes = await fetch('https://api.digitalocean.com/v2/apps', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${d.authToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ spec: appSpec })
+        });
+
+        const createText = await createRes.text();
+        if (!createRes.ok) throw new Error(`DigitalOcean App creation failed: ${createRes.status} - ${createText}`);
+
+        const createData = JSON.parse(createText);
+        const appId = createData.app.id;
+        addLog(`App created. App ID: ${appId}. Waiting for deployment...`);
+        setStatus(DeploymentStatus.BUILDING);
+
+        // Poll for deployment readiness
+        let isDone = false;
+        let attempts = 0;
+        let liveUrl = null;
+
+        while (!isDone && attempts < 60) {
+            await sleep(5000);
+            attempts++;
+
+            const pollRes = await fetch(`https://api.digitalocean.com/v2/apps/${appId}`, {
+                headers: { 'Authorization': `Bearer ${d.authToken}` }
+            });
+            const pollData = await pollRes.json();
+            const app = pollData.app;
+
+            if (!app) {
+                addLog('Waiting for app to initialize...');
+                continue;
+            }
+
+            const activeDeployment = app.active_deployment;
+            const pendingDeployment = app.pending_deployment;
+            const inProgressDeployment = app.in_progress_deployment;
+
+            addLog(`App Phase: ${app.last_deployment_active_at ? 'Building/Deploying' : 'Initializing'}`);
+
+            if (activeDeployment && activeDeployment.phase === 'ACTIVE') {
+                liveUrl = app.live_url || `https://${app.default_ingress}`;
+                setStatus(DeploymentStatus.SUCCESS);
+                addLog(`Deployment successful!`);
+                addLog(`Live URL: ${liveUrl}`);
+                const dFinal = deployments.get(id);
+                if (dFinal) {
+                    dFinal.url = liveUrl;
+                    saveData();
+                }
+                isDone = true;
+            } else if (activeDeployment && activeDeployment.phase === 'ERROR') {
+                throw new Error('DigitalOcean deployment failed during build phase.');
+            } else if (inProgressDeployment) {
+                const phase = inProgressDeployment.phase;
+                addLog(`In progress: ${phase}`);
+                if (phase === 'ERROR') throw new Error('DigitalOcean in-progress deployment hit an error.');
+            }
+        }
+
+        if (!isDone) {
+            throw new Error('DigitalOcean deployment timed out after 5 minutes.');
+        }
+
+    } catch (error) {
+        console.error('DigitalOcean Error:', error);
+        setStatus(DeploymentStatus.FAILURE);
+        addLog(`Error: ${error.message}`);
+        saveData();
+    }
+}
