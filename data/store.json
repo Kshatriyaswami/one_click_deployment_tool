@@ -1,0 +1,115 @@
+{
+<<<<<<< HEAD
+  "deployments": [],
+  "clones": []
+}
+=======
+  "deployments": [
+    [
+      "n8b0ak",
+      {
+        "id": "n8b0ak",
+        "repoUrl": "https://github.com/Kshatriyaswami/randomdeploytool",
+        "repoId": 1152167350,
+        "platform": "Vercel",
+        "authToken": "a0NUPc2n90plvZiOaN21diJk",
+        "status": "success",
+        "logs": [
+          "[12:21:12 pm] Cloning https://github.com/Kshatriyaswami/randomdeploytool to: D:\\one_click_deployment\\temp_deployments\\deploy-n8b0ak",
+          "[12:21:13 pm] Repository cloned successfully.",
+          "[12:21:13 pm] Preparing files for upload...",
+          "[12:21:13 pm] Found 30 files to process.",
+          "[12:21:19 pm] All files uploaded to Vercel storage.",
+          "[12:21:19 pm] Initiating deployment...",
+          "[12:21:21 pm] Deployment initiated. ID: dpl_AFwJueDo2WDxXGyTxpp9jAQ6Ey5k",
+          "[12:21:24 pm] Vercel Status: BUILDING",
+          "[12:21:28 pm] Vercel Status: BUILDING",
+          "[12:21:32 pm] Vercel Status: BUILDING",
+          "[12:21:36 pm] Vercel Status: BUILDING",
+          "[12:21:40 pm] Deployment completed successfully!"
+        ],
+        "timestamp": "2026-02-08T06:51:11.999Z",
+        "url": "https://randomdeploytool-rgb0h0tnb-swamis-projects-c46278af.vercel.app"
+      }
+    ],
+    [
+      "2v1al",
+      {
+        "id": "2v1al",
+        "repoUrl": "https://github.com/Kshatriyaswami/tentacion-cakes-menu",
+        "repoId": 1126274614,
+        "platform": "Netlify",
+        "authToken": "nfp_5aeH3EZyPEtgQn1oBmCDY9cv72Hw6aCveb8c",
+        "status": "failure",
+        "logs": [
+          "[1:28:45 pm] Cloning https://github.com/Kshatriyaswami/tentacion-cakes-menu to: D:\\one_click_deployment\\temp_deployments\\deploy-2v1al",
+          "[1:28:58 pm] Repository cloned successfully.",
+          "[1:28:58 pm] Zipping files for Netlify...",
+          "[1:28:58 pm] Installing dependencies & building locally...",
+          "[1:30:59 pm] Found build directory: dist",
+          "[1:31:02 pm] Created Zip archive.",
+          "[1:31:02 pm] Creating Netlify site (attempting name: tentacion-cakes-menu)...",
+          "[1:31:06 pm] Site ready: tentacion-cakes-menu. Uploading Zip...",
+          "[1:36:13 pm] Error: fetch failed"
+        ],
+        "timestamp": "2026-03-14T07:58:45.582Z",
+        "url": null
+      }
+    ],
+    [
+      "bidsaah",
+      {
+        "id": "bidsaah",
+        "repoUrl": "https://github.com/Kshatriyaswami/College-Indoor-Navigation",
+        "repoId": 1184145953,
+        "platform": "Netlify",
+        "authToken": "nfp_fLmJ7nUeMXdVonxPP5AFw2FC5RTvwpzk842a",
+        "status": "success",
+        "logs": [
+          "[3:32:27 pm] Cloning https://github.com/Kshatriyaswami/College-Indoor-Navigation to: D:\\one_click_deployment\\temp_deployments\\deploy-bidsaah",
+          "[3:33:17 pm] Repository cloned successfully.",
+          "[3:33:17 pm] Zipping files for Netlify...",
+          "[3:33:17 pm] Installing dependencies & building locally...",
+          "[3:34:03 pm] Found build directory: dist",
+          "[3:34:18 pm] Created Zip archive.",
+          "[3:34:18 pm] Creating Netlify site (attempting name: College-Indoor-Navigation)...",
+          "[3:34:20 pm] Site ready: College-Indoor-Navigation. Uploading Zip...",
+          "[3:35:06 pm] Upload complete.",
+          "[3:35:10 pm] Status: uploaded"
+        ],
+        "timestamp": "2026-03-17T10:02:27.354Z",
+        "url": "https://college-indoor-navigation.netlify.app"
+      }
+    ]
+  ],
+  "clones": [
+    [
+      "n8b0ak",
+      {
+        "id": "n8b0ak",
+        "repoUrl": "https://github.com/Kshatriyaswami/randomdeploytool",
+        "path": "D:\\one_click_deployment\\temp_deployments\\deploy-n8b0ak",
+        "timestamp": "2026-02-08T06:51:13.891Z"
+      }
+    ],
+    [
+      "2v1al",
+      {
+        "id": "2v1al",
+        "repoUrl": "https://github.com/Kshatriyaswami/tentacion-cakes-menu",
+        "path": "D:\\one_click_deployment\\temp_deployments\\deploy-2v1al",
+        "timestamp": "2026-03-14T07:58:58.437Z"
+      }
+    ],
+    [
+      "bidsaah",
+      {
+        "id": "bidsaah",
+        "repoUrl": "https://github.com/Kshatriyaswami/College-Indoor-Navigation",
+        "path": "D:\\one_click_deployment\\temp_deployments\\deploy-bidsaah",
+        "timestamp": "2026-03-17T10:03:17.651Z"
+      }
+    ]
+  ]
+}
+>>>>>>> 2dad70a (Version 2.0)
